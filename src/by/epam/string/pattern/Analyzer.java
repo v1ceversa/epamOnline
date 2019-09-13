@@ -5,13 +5,13 @@ import java.util.regex.Pattern;
 
 public class Analyzer
 {
-	private static Pattern anyNode = Pattern.compile("(<.+?>)|((?<=\\>).+?(?=\\<))");
+	private Pattern anyNode;
 	private Pattern anyTag;
-	private static Pattern openTag = Pattern.compile("<.+?[^/]?>");
+	private Pattern openTag;
 	private Pattern closeTag;
 	private Pattern standAloneTag;
 	//private Pattern textPattern;
-	private static Matcher mainMatcher;
+	private Matcher mainMatcher;
 	private int count = 0;
 	private int amountOfNode = 0;
 	private String xml;
