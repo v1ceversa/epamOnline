@@ -7,7 +7,7 @@ public class Analyzer
 {
 	private static Pattern anyNode = Pattern.compile("(<.+?>)|((?<=\\>).+?(?=\\<))");
 	private Pattern anyTag;
-	private Pattern openTag;
+	private static Pattern openTag = Pattern.compile("<.+?[^/]?>");
 	private Pattern closeTag;
 	private Pattern standAloneTag;
 	//private Pattern textPattern;
@@ -20,9 +20,9 @@ public class Analyzer
 	{
 		anyNode = Pattern.compile("(<.+?>)|((?<=\\>).+?(?=\\<))");
 		anyTag = Pattern.compile("<.+?>");
-		openTag = Pattern.compile("<(?!/).+?(?!=/)>");
-		closeTag = Pattern.compile("</.+?(?!=/)>");
-		standAloneTag = Pattern.compile("<(?!/).+?/>");
+		openTag = Pattern.compile("<[^/>]+>");
+		closeTag = Pattern.compile("</[^/>]+>");
+		standAloneTag = Pattern.compile("<[^/>]+/>");
 		//textPattern = Pattern.compile("(?<=\\>).+?(?=\\<)");
 	}
 	
@@ -98,12 +98,10 @@ public class Analyzer
 		while(i != 0 && matTag.find())
 		{
 			String tag = matTag.group();
-			System.out.println(tag);
 			matOpen = openTag.matcher(tag);
 			matClose = closeTag.matcher(tag);
 			if(matOpen.matches())
 			{
-				System.out.println("+");
 				i++;
 			}
 			if(matClose.matches())
@@ -188,7 +186,7 @@ public class Analyzer
 	
 	public static void main(String[] args)
 	{
-		String simpleXML = "<a><b></b>b<b>b<d />bb</b>b</a>";
+		String simpleXML = "<a id=\"some\"><b></b>b<b>b<d />bb</b>b</a>";
 		
 		Analyzer t = new Analyzer();
 		
@@ -200,8 +198,6 @@ public class Analyzer
 		{
 			System.err.println(e.toString());
 		}
-		
-		System.out.println(t.amountOfNode);
 		for(int i = 0; i < t.amountOfNode; i++)
 		{
 			System.out.println(t.getNextNode());
